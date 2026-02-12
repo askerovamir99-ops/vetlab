@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ГосВетЛаб — Лаборатория Будущего</title>
+<meta name="description" content="Инновационная ветеринарная лаборатория. Игры, онлайн-запись, AI-консультант.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+<style>
+/* ================= VARIABLES & THEME ================= */
+:root {
+    --bg-body: #f0f4f8;
+    --bg-card: #ffffff;
+    --bg-glass: rgba(255, 255, 255, 0.85);
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --primary: #3b82f6; /* Royal Blue */
+    --primary-dark: #1d4ed8;
+    --accent: #10b981; /* Green for health */
+    --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    --gradient-gold: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    --shadow-soft: 0 10px 40px -10px rgba(0,0,0,0.08);
+    --shadow-hover: 0 20px 50px -10px rgba(59, 130, 246, 0.25);
+    --radius-xl: 28px;
+    --radius-md: 16px;
+    --border: #e2e8f0;
+}
+
+body.dark-mode {
+    --bg-body: #0f172a;
+    --bg-card: #1e293b;
+    --bg-glass: rgba(30, 41, 59, 0.9);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --primary: #60a5fa;
+    --border: #334155;
+    --shadow-soft: 0 10px 40px -10px rgba(0,0,0,0.5);
+}
+
+/* ================= SELECTION STYLE ================= */
+::selection { background: var(--primary); color: white; text-shadow: none; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--bg-body);
+    color: var(--text-main);
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+a { text-decoration: none; color: inherit; transition: 0.3s; }
+button { cursor: pointer; border: none; font-family: inherit; }
+img { max-width: 100%; display: block; object-fit: cover; }
+input, select, textarea { font-family: inherit; }
+
+.container { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+
+/* ================= BUTTONS ================= */
+.btn {
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5); }
+.btn-outline { border: 1px solid var(--border); background: transparent; color: var(--text-main); }
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+/* ================= MARQUEE ================= */
+.marquee-wrapper {
+    background: var(--primary);
+    color: white;
+    padding: 10px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    margin-bottom: 40px;
+    transform: rotate(-1deg);
+    width: 105%;
+    left: -2.5%;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.marquee-content {
+    display: inline-block;
+    animation: marquee 30s linear infinite;
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* ================= HEADER ================= */
+header { position: sticky; top: 20px; z-index: 100; margin: 0 20px; }
+.nav-glass {
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-soft);
+    max-width: 1280px;
+    margin: 0 auto;
+}
+.logo { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+.logo span { background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+nav a { font-weight: 600; margin: 0 10px; color: var(--text-muted); font-size: 15px; }
+nav a:hover { color: var(--primary); }
+
+.header-controls { display: flex; align-items: center; gap: 10px; }
+.lang-switcher { display: flex; background: var(--bg-body); border-radius: 20px; padding: 3px; border: 1px solid var(--border); }
+.lang-opt { padding: 5px 10px; font-size: 12px; font-weight: 700; border-radius: 15px; color: var(--text-muted); transition: 0.3s; }
+.lang-opt:hover { color: var(--primary); }
+.lang-opt.active { background: white; color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+/* ================= HERO ================= */
+.hero { padding: 80px 0 40px; position: relative; }
+.hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+.hero h1 { font-size: 60px; line-height: 1.1; margin-bottom: 25px; letter-spacing: -1px; }
+.hero-img-container { position: relative; border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-hover); }
+.hero-img-container img { transition: transform 0.5s; width: 100%; }
+.hero-img-container:hover img { transform: scale(1.05); }
+.floating-badge {
+    position: absolute; bottom: 30px; right: 30px;
+    background: white; padding: 15px 25px; border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    display: flex; align-items: center; gap: 15px;
+    animation: float 4s ease-in-out infinite;
+}
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* ================= PRICES & SERVICES ================= */
+.section-title { text-align: center; margin-bottom: 40px; font-size: 36px; }
+.prices-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-bottom: 80px; }
+.price-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 30px;
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+.price-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-hover); border-color: var(--primary); }
+.price-icon {
+    width: 60px; height: 60px; background: var(--bg-body);
+    border-radius: 15px; display: flex; align-items: center; justify-content: center;
+    font-size: 30px; color: var(--primary); margin-bottom: 20px;
+}
+.price-tag { font-size: 24px; font-weight: 800; color: var(--primary); margin: 15px 0; }
+.price-tag span { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+.price-list li { list-style: none; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: var(--text-muted); font-size: 14px;}
+.price-list i { color: var(--accent); }
+
+/* ================= PROMOTIONS ================= */
+.promo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 80px; }
+.promo-card {
+    background: linear-gradient(135deg, #fff 0%, #f0fdf4 100%);
+    border: 1px solid #bbf7d0; border-radius: 24px; padding: 30px;
+    position: relative; overflow: hidden;
+}
+.promo-card::before { content: '%'; position: absolute; right: -20px; top: -30px; font-size: 150px; color: rgba(16, 185, 129, 0.1); font-weight: 900; }
+.promo-badge { background: var(--accent); color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; margin-bottom: 15px; }
+
+/* ================= DONATION ================= */
+.donate-box {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xl);
+    padding: 50px; text-align: center; margin-bottom: 80px; box-shadow: var(--shadow-soft);
+}
+.progress-bar-container { background: var(--bg-body); height: 20px; border-radius: 10px; margin: 30px auto; max-width: 600px; overflow: hidden; }
+.progress-bar { height: 100%; background: var(--gradient-gold); width: 65%; border-radius: 10px; transition: width 1s; }
+.donate-btns { display: flex; gap: 15px; justify-content: center; margin-top: 25px; flex-wrap: wrap; }
+
+/* ================= CALCULATOR ================= */
+.calc-box {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white; padding: 50px; border-radius: var(--radius-xl);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
+    box-shadow: 0 20px 40px rgba(16, 185, 129, 0.3);
+}
+.result-circle {
+    width: 150px; height: 150px; background: white; color: var(--accent);
+    border-radius: 50%; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; font-weight: 800; font-size: 40px; margin: 0 auto;
+}
+
+/* ================= GAME SECTION ================= */
+.game-section {
+    background: var(--bg-card); border-radius: var(--radius-xl);
+    padding: 60px; margin: 80px 0; border: 1px solid var(--border); text-align: center;
+}
+.game-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;
+    max-width: 500px; margin: 40px auto;
+}
+.game-card {
+    aspect-ratio: 1; background: var(--bg-body); border-radius: 12px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 40px; transition: transform 0.6s; transform-style: preserve-3d; position: relative;
+    border: 2px solid var(--border);
+}
+.game-card.flip { transform: rotateY(180deg); background: white; border-color: var(--primary); }
+.game-card::after {
+    content: '❓'; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--gradient-primary); backface-visibility: hidden;
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 30px; color: white;
+}
+.game-card span { transform: rotateY(180deg); }
+
+/* ================= CONTACTS ================= */
+.contact-section { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 80px; }
+.contact-form { background: var(--bg-card); padding: 40px; border-radius: var(--radius-xl); border: 1px solid var(--border); box-shadow: var(--shadow-soft); }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
+.form-control { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); transition: 0.3s; }
+.form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+.admin-card { background: var(--gradient-primary); color: white; padding: 40px; border-radius: var(--radius-xl); display: flex; flex-direction: column; justify-content: center; }
+
+/* ================= MAP ================= */
+.map-wrapper { position: relative; height: 500px; border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-soft); }
+.map-card { position: absolute; top: 40px; left: 40px; background: var(--bg-glass); backdrop-filter: blur(15px); padding: 30px; border-radius: 20px; max-width: 350px; z-index: 10; border: 1px solid var(--border); }
+
+/* ================= MODALS (NEW) ================= */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(5px);
+    z-index: 2000; opacity: 0; visibility: hidden;
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.3s;
+}
+.modal-overlay.active { opacity: 1; visibility: visible; }
+.modal-content {
+    background: var(--bg-card); padding: 40px; border-radius: 24px;
+    max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto;
+    position: relative; transform: scale(0.9); transition: 0.3s;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid var(--border);
+}
+.modal-overlay.active .modal-content { transform: scale(1); }
+.close-modal { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; color: var(--text-muted); }
+
+/* Profile Specifics */
+.profile-header { display: flex; align-items: center; gap: 30px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+.pet-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary); }
+.stat-box { background: var(--bg-body); padding: 15px; border-radius: 12px; text-align: center; min-width: 100px; }
+.visit-row { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid var(--border); align-items: center; }
+.visit-row:last-child { border-bottom: none; }
+.status-badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+.status-done { background: #d1fae5; color: #065f46; }
+.status-future { background: #dbeafe; color: #1e40af; }
+
+/* Certificate Specifics */
+.cert-box { border: 10px double var(--gradient-gold); padding: 40px; text-align: center; border-radius: 20px; background: linear-gradient(to bottom right, #fff, #fffbeb); }
+
+/* ================= CHAT BOT ================= */
+.robo-btn { position: fixed; bottom: 30px; right: 30px; width: 70px; height: 70px; background: white; border-radius: 50%; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; transition: 0.3s; border: 2px solid var(--primary); }
+.robo-btn:hover { transform: scale(1.1) rotate(10deg); }
+.chat-container { position: fixed; bottom: 110px; right: 30px; width: 360px; height: 550px; background: var(--bg-card); border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); display: flex; flex-direction: column; overflow: hidden; opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); z-index: 999; border: 1px solid var(--border); }
+.chat-container.active { opacity: 1; visibility: visible; transform: translateY(0); }
+.chat-header { background: var(--primary); padding: 15px; color: white; display: flex; align-items: center; justify-content: space-between; }
+.chat-messages { flex: 1; padding: 20px; overflow-y: auto; background: var(--bg-body); display: flex; flex-direction: column; gap: 15px; }
+.msg { max-width: 80%; padding: 12px 18px; border-radius: 18px; font-size: 14px; position: relative; animation: popIn 0.3s ease; }
+@keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.msg-bot { background: white; color: var(--text-main); border-bottom-left-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.msg-user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+.chat-input-area { padding: 15px; background: var(--bg-card); border-top: 1px solid var(--border); display: flex; gap: 10px; }
+.chat-input-area input { flex: 1; padding: 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg-body); color: var(--text-main); }
+.typing-indicator { display: none; gap: 5px; padding: 10px; background: white; width: fit-content; border-radius: 15px; margin-bottom: 10px; margin-left: 20px;}
+.dot { width: 6px; height: 6px; background: #94a3b8; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out; }
+.dot:nth-child(1) { animation-delay: -0.32s; }
+.dot:nth-child(2) { animation-delay: -0.16s; }
+@keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+
+/* Responsive */
+@media(max-width: 900px) {
+    .hero-grid, .calc-box, .contact-section, .profile-header { grid-template-columns: 1fr; flex-direction: column; text-align: center; }
+    .nav-glass { border-radius: 0; margin: 0; width: 100%; top: 0; padding: 10px; flex-wrap: wrap; }
+    nav { display: none; } /* Mobile menu simplified */
+    .marquee-wrapper { width: 100%; left: 0; transform: none; }
+    .prices-grid, .promo-grid, .game-grid { grid-template-columns: 1fr; }
+    .pet-avatar { margin: 0 auto; }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="nav-glass">
+        <div class="logo">
+            <i class="ph-fill ph-paw-print" style="color:var(--primary); font-size: 28px;"></i>
+            <span>ГосВетЛаб</span>
+        </div>
+        <nav>
+            <a href="#about" data-i18n="nav_about">О нас</a>
+            <a href="#prices" data-i18n="nav_prices">Услуги</a>
+            <a href="#promo" data-i18n="nav_promo">Акции</a>
+            <a href="#contacts" data-i18n="nav_contacts">Запись</a>
+            <a href="#games" data-i18n="nav_games">Игры</a>
+        </nav>
+        <div class="header-controls">
+            <div class="lang-switcher">
+                <button class="lang-opt active" onclick="setLanguage('ru')">RU</button>
+                <button class="lang-opt" onclick="setLanguage('kz')">KZ</button>
+                <button class="lang-opt" onclick="setLanguage('en')">EN</button>
+            </div>
+            <button onclick="toggleTheme()" class="btn" style="background:var(--bg-body); color:var(--text-main); padding: 10px;">
+                <i class="ph-fill ph-moon-stars" style="font-size:20px"></i>
+            </button>
+            <button onclick="openProfile()" class="btn btn-primary" style="padding: 10px 15px;">
+                <i class="ph-fill ph-user-circle" style="font-size:20px"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="hero">
+        <div class="hero-grid">
+            <div>
+                <h1 data-i18n="hero_title">Здоровье питомца — <br><span style="color:var(--primary)">Наша наука</span></h1>
+                <p style="font-size: 20px; color: var(--text-muted); margin-bottom: 30px;" data-i18n="hero_desc">
+                    Государственная ветеринарная лаборатория. Используем AI-диагностику и оборудование класса "А".
+                </p>
+                <div style="display:flex; gap:15px; flex-wrap: wrap;">
+                    <a href="#contacts" class="btn btn-primary">
+                        <i class="ph-bold ph-calendar-check"></i> <span data-i18n="btn_book">Записаться онлайн</span>
+                    </a>
+                    <button class="btn" style="background: white; color: var(--text-main); box-shadow: var(--shadow-soft);" onclick="toggleChat()">
+                        <i class="ph-bold ph-chat-circle-dots"></i> <span data-i18n="btn_ai">AI-Помощник</span>
+                    </button>
+                </div>
+            </div>
+            <div class="hero-img-container">
+                <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop" alt="Счастливая собака">
+                <div class="floating-badge">
+                    <i class="ph-fill ph-medal" style="font-size:30px; color: gold;"></i>
+                    <div>
+                        <strong data-i18n="badge_best">Лучшая лаборатория</strong>
+                        <div style="font-size:12px; color: #888">2026</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="marquee-wrapper">
+        <div class="marquee-content" id="marqueeText">
+            🧬 ГЕНЕТИЧЕСКИЕ ТЕСТЫ СО СКИДКОЙ 20%    •    🚑 СКОРАЯ ПОМОЩЬ 24/7    •    🏥 НОВОЕ ОБОРУДОВАНИЕ ИЗ ЯПОНИИ    •    🧬 GENETIC TESTS -20%    •    🚑 EMERGENCY 24/7    •
+        </div>
+    </div>
+
+    <section id="prices">
+        <h2 class="section-title" data-i18n="title_services">💸 Услуги и Цены</h2>
+        <div class="prices-grid" id="servicesGrid">
+            </div>
+    </section>
+
+    <section id="promo">
+        <h2 class="section-title" data-i18n="title_promo">🎁 Акции и Скидки</h2>
+        <div class="promo-grid">
+            <div class="promo-card">
+                <div class="promo-badge" data-i18n="promo_bday">День Рождения</div>
+                <h3 data-i18n="promo_bday_title">Скидка именинникам</h3>
+                <p data-i18n="promo_bday_desc">В неделю дня рождения питомца скидка 15% на все услуги.</p>
+                <button class="btn btn-outline" style="margin-top: 15px;" onclick="alert('Покажите паспорт питомца на кассе!')">Подробнее</button>
+            </div>
+            <div class="promo-card" style="border-color: var(--primary);">
+                <div class="promo-badge" style="background:var(--primary);">New</div>
+                <h3 data-i18n="promo_puppy_title">Пакет "Щенок"</h3>
+                <p data-i18n="promo_puppy_desc">Первая вакцинация + паспорт + чип = 10 000 ₸</p>
+                <button class="btn btn-primary" style="margin-top: 15px; padding: 10px 20px;">Заказать</button>
+            </div>
+             <div class="promo-card">
+                <div class="promo-badge" style="background:orange;">Social</div>
+                <h3 data-i18n="promo_senior_title">Пенсионерам</h3>
+                <p data-i18n="promo_senior_desc">Скидка 10% при предъявлении пенсионного удостоверения владельца.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="calc" style="margin-bottom: 80px;">
+        <h2 class="section-title" data-i18n="title_calc">🧬 Конвертер возраста</h2>
+        <div class="calc-box">
+            <div>
+                <h3 style="font-size: 28px; margin-bottom: 15px;" data-i18n="calc_q">Сколько лет питомцу?</h3>
+                <p style="opacity: 0.9; margin-bottom: 20px;">Science: 16 × ln(age) + 31.</p>
+                <input type="number" id="dogAge" class="form-control" style="background: rgba(255,255,255,0.2); border:none; color:white; margin-bottom:15px;" placeholder="5" oninput="calculateAge()">
+            </div>
+            <div style="text-align: center;">
+                <div class="result-circle" id="humanAge">0</div>
+                <div style="margin-top: 15px; font-size: 20px;" data-i18n="calc_res">Человеческих лет</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="games" class="game-section">
+        <h2 style="font-size: 32px; margin-bottom: 10px;" data-i18n="game_title">🐾 Зал ожидания</h2>
+        <p style="color: var(--text-muted);" data-i18n="game_desc">Выиграйте и получите сертификат на скидку 5%!</p>
+        <div class="game-grid" id="gameGrid"></div>
+        <button class="btn btn-primary" onclick="initGame()" data-i18n="btn_shuffle">Перемешать карты</button>
+    </section>
+
+    <section id="donate">
+        <h2 class="section-title" data-i18n="title_donate">🤝 Помощь приюту</h2>
+        <div class="donate-box">
+            <h3 data-i18n="donate_title">Сбор на новый корпус "Добрые лапы"</h3>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 10px auto;">
+                Мы сотрудничаем с городским приютом. Каждое пожертвование приближает животных к новому теплому дому.
+            </p>
+            <div class="progress-bar-container">
+                <div class="progress-bar" style="width: 75%"></div>
+            </div>
+            <p><strong>3 750 000 ₸</strong> / 5 000 000 ₸</p>
+            
+            <div class="donate-btns">
+                <button class="btn btn-outline" onclick="donate(500)">500 ₸</button>
+                <button class="btn btn-outline" onclick="donate(1000)">1 000 ₸</button>
+                <button class="btn btn-outline" onclick="donate(5000)">5 000 ₸</button>
+                <button class="btn btn-primary" onclick="donate('custom')" data-i18n="btn_donate_other">Другая сумма</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="contacts">
+        <h2 class="section-title" data-i18n="title_contacts">📝 Запись и Контакты</h2>
+        <div class="contact-section">
+            <div class="contact-form">
+                <h3 style="margin-bottom:20px;" data-i18n="form_title">Оставить заявку</h3>
+                <form onsubmit="submitForm(event)">
+                    <div class="form-group">
+                        <label data-i18n="lbl_name">Ваше имя</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="lbl_phone">Телефон</label>
+                        <input type="tel" class="form-control" placeholder="+7 (777) 000-00-00" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;" data-i18n="btn_send">Отправить</button>
+                </form>
+            </div>
+            
+            <div class="admin-card">
+                <h3 style="font-size:32px; margin-bottom:20px;" data-i18n="admin_title">Связь с администрацией</h3>
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <i class="ph-fill ph-phone-call" style="font-size:28px;"></i>
+                        <div>
+                            <div style="font-weight:700;">Hotline</div>
+                            <div style="font-size:14px; opacity:0.8;">+7 (727) 300-20-20</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="map" class="map-wrapper">
+        <div class="map-card">
+            <h3 style="margin-bottom: 10px;">📍 <span data-i18n="map_title">Мы здесь</span></h3>
+            <p style="color: var(--text-muted); margin-bottom: 15px;">г. Алматы, пр. Абая 150</p>
+            <a href="https://go.2gis.com/" target="_blank" style="color:var(--primary); font-weight:700;">2GIS / Maps →</a>
+        </div>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2906.776684820689!2d76.89736521544605!3d43.23514687913781!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x388369b036814b0b%3A0x6a05e55273d6b04a!2z0L_RgC4g0JDQsdCw0Y8gMTUwLCDQkNC70LzQsNGC0YssINCa0LDQt9Cw0YXRgdGC0LDQvQ!5e0!3m2!1sru!2skz!4v1645000000000!5m2!1sru!2skz" 
+        width="100%" height="100%" style="border:0; filter: grayscale(20%) contrast(1.2);" allowfullscreen="" loading="lazy"></iframe>
+    </section>
+
+</main>
+
+<footer style="background:var(--bg-card); padding: 40px; text-align:center; margin-top: 80px; border-top: 1px solid var(--border);">
+    <div class="container">
+        <p style="color: var(--text-muted);">© 2026 ГосВетЛаб. <span data-i18n="footer_copy">Сделано с любовью к животным.</span></p>
+    </div>
+</footer>
+
+<div class="modal-overlay" id="profileModal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal('profileModal')">&times;</span>
+        <h2 style="margin-bottom: 30px;" data-i18n="profile_title">Личный кабинет питомца</h2>
+        <div class="profile-header">
+            <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?q=80&w=300&auto=format&fit=crop" alt="Pet" class="pet-avatar">
+            <div style="text-align: left; flex:1;">
+                <h3 style="font-size: 28px;">Рекс</h3>
+                <p style="color: var(--text-muted);">Золотистый ретривер • ID: #9921</p>
+                <div style="display: flex; gap: 15px; margin-top: 15px; flex-wrap: wrap;">
+                    <div class="stat-box"><strong>5 <span data-i18n="years">лет</span></strong><br><span style="font-size:12px; color:#888;">Возраст</span></div>
+                    <div class="stat-box"><strong>32 кг</strong><br><span style="font-size:12px; color:#888;">Вес</span></div>
+                    <div class="stat-box"><strong>M</strong><br><span style="font-size:12px; color:#888;">Пол</span></div>
+                </div>
+            </div>
+        </div>
+        
+        <h4 style="margin-bottom: 15px;" data-i18n="history_title">История посещений</h4>
+        <div style="background: var(--bg-body); border-radius: 16px;">
+            <div class="visit-row">
+                <div>
+                    <div style="font-weight: bold;">Вакцинация (Комплекс)</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">10.02.2026 • Др. Сатова</div>
+                </div>
+                <span class="status-badge status-done">Завершено</span>
+            </div>
+            <div class="visit-row">
+                <div>
+                    <div style="font-weight: bold;">Осмотр стоматолога</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">15.11.2025 • Др. Иванов</div>
+                </div>
+                <span class="status-badge status-done">Завершено</span>
+            </div>
+             <div class="visit-row" style="background: rgba(59, 130, 246, 0.05);">
+                <div>
+                    <div style="font-weight: bold;">Груминг + Стрижка</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">25.02.2026 • 14:00</div>
+                </div>
+                <span class="status-badge status-future">Предстоящий</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="serviceModal">
+    <div class="modal-content" style="max-width: 500px; text-align: center;">
+        <span class="close-modal" onclick="closeModal('serviceModal')">&times;</span>
+        <div id="serviceDetailContent">
+            </div>
+        <button class="btn btn-primary" onclick="closeModal('serviceModal'); document.querySelector('#contacts').scrollIntoView({behavior:'smooth'})" style="margin-top:20px;">Записаться сейчас</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="certModal">
+    <div class="modal-content" style="max-width: 600px;">
+        <span class="close-modal" onclick="closeModal('certModal')">&times;</span>
+        <div class="cert-box">
+            <i class="ph-fill ph-medal" style="font-size: 60px; color: gold; margin-bottom: 10px;"></i>
+            <h2 style="color: var(--primary);">ПОЗДРАВЛЯЕМ!</h2>
+            <p style="margin-bottom: 20px;">Вы выиграли скидку за отличную память.</p>
+            <div style="font-size: 50px; font-weight: 800; color: var(--text-main); margin: 20px 0;">-5%</div>
+            <p style="color: var(--text-muted);">Промокод: <strong>MEMORY2026</strong></p>
+            <p style="font-size: 12px; margin-top: 10px;">Покажите этот экран администратору.</p>
+        </div>
+    </div>
+</div>
+
+<div class="robo-btn" onclick="toggleChat()">
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Robo Dog" style="width:45px;">
+</div>
+
+<div class="chat-container" id="chatContainer">
+    <div class="chat-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <img style="width:30px; background:white; border-radius:50%; padding:2px;" src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Bot">
+            <div>
+                <div style="font-weight: 700; font-size:14px;">Робо-Лаб v2.0</div>
+            </div>
+        </div>
+        <button onclick="toggleChat()" style="color:white; font-size: 20px;"><i class="ph-bold ph-x"></i></button>
+    </div>
+    
+    <div class="chat-messages" id="chatMessages"></div>
+    
+    <div class="typing-indicator" id="typing">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+
+    <div class="chat-input-area">
+        <input type="text" id="userInput" placeholder="..." onkeypress="handleKeyPress(event)">
+        <button onclick="sendMessage()" style="background:var(--primary); color:white; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+            <i class="ph-fill ph-paper-plane-right"></i>
+        </button>
+    </div>
+</div>
+
+<script>
+    // ================= 1. DATA & TRANSLATIONS =================
+    const translations = {
+        ru: {
+            nav_about: "О нас", nav_prices: "Услуги", nav_contacts: "Запись", nav_games: "Игры", nav_promo: "Акции",
+            hero_title: "Здоровье питомца — <br><span style='color:var(--primary)'>Наша наука</span>",
+            hero_desc: "Государственная ветеринарная лаборатория. Используем AI-диагностику и оборудование класса 'А'.",
+            btn_book: "Записаться онлайн", btn_ai: "AI-Помощник", badge_best: "Лучшая лаборатория",
+            title_services: "💸 Услуги и Цены", title_promo: "🎁 Акции и Скидки", title_calc: "🧬 Конвертер возраста",
+            calc_q: "Сколько лет питомцу?", calc_res: "Человеческих лет",
+            game_title: "🐾 Зал ожидания", game_desc: "Выиграйте и получите сертификат на скидку 5%!", btn_shuffle: "Начать игру",
+            title_donate: "🤝 Помощь приюту", donate_title: "Сбор на новый корпус 'Добрые лапы'", btn_donate_other: "Другая сумма",
+            title_contacts: "📝 Запись и Контакты", form_title: "Оставить заявку", lbl_name: "Ваше имя", lbl_phone: "Телефон", btn_send: "Отправить",
+            admin_title: "Связь с администрацией", map_title: "Мы здесь", footer_copy: "Сделано с любовью к животным.",
+            profile_title: "Личный кабинет питомца", years: "лет", history_title: "История посещений",
+            promo_bday: "День Рождения", promo_bday_title: "Скидка именинникам", promo_bday_desc: "В неделю дня рождения питомца скидка 15%.",
+            promo_puppy_title: "Пакет 'Щенок'", promo_puppy_desc: "Вакцина + паспорт + чип = 10 000 ₸",
+            promo_senior_title: "Пенсионерам", promo_senior_desc: "Скидка 10% при предъявлении удостоверения."
+        },
+        kz: {
+            nav_about: "Біз туралы", nav_prices: "Қызметтер", nav_contacts: "Жазылу", nav_games: "Ойындар", nav_promo: "Акциялар",
+            hero_title: "Үй жануарының саулығы — <br><span style='color:var(--primary)'>Біздің ғылым</span>",
+            hero_desc: "Мемлекеттік ветеринарлық зертхана. AI-диагностика және 'А' класты жабдықтар.",
+            btn_book: "Онлайн жазылу", btn_ai: "AI-Көмекші", badge_best: "Үздік зертхана",
+            title_services: "💸 Қызметтер мен Бағалар", title_promo: "🎁 Акциялар мен Жеңілдіктер", title_calc: "🧬 Жас конвертері",
+            calc_q: "Жануар неше жаста?", calc_res: "Адам жасымен",
+            game_title: "🐾 Күту залы", game_desc: "Ойынды ұтып, 5% жеңілдік алыңыз!", btn_shuffle: "Ойынды бастау",
+            title_donate: "🤝 Баспанаға көмек", donate_title: "'Мейірімді табандар' жаңа корпусына жылу", btn_donate_other: "Басқа сома",
+            title_contacts: "📝 Жазылу және Байланыс", form_title: "Өтінім қалдыру", lbl_name: "Сіздің атыңыз", lbl_phone: "Телефон", btn_send: "Жіберу",
+            admin_title: "Әкімшілікпен байланыс", map_title: "Біздің мекенжай", footer_copy: "Жануарларға деген сүйіспеншілікпен жасалған.",
+            profile_title: "Жеке кабинет", years: "жас", history_title: "Келу тарихы",
+            promo_bday: "Туған күн", promo_bday_title: "Туған күн иелеріне", promo_bday_desc: "Туған күн аптасында 15% жеңілдік.",
+            promo_puppy_title: "'Күшік' пакеті", promo_puppy_desc: "Вакцина + төлқұжат + чип = 10 000 ₸",
+            promo_senior_title: "Зейнеткерлерге", promo_senior_desc: "Куәлікті көрсеткенде 10% жеңілдік."
+        },
+        en: {
+            nav_about: "About", nav_prices: "Services", nav_contacts: "Booking", nav_games: "Games", nav_promo: "Promo",
+            hero_title: "Pet Health is <br><span style='color:var(--primary)'>Our Science</span>",
+            hero_desc: "State Veterinary Lab. Using AI diagnostics and Class 'A' equipment.",
+            btn_book: "Book Online", btn_ai: "AI-Assistant", badge_best: "Best Laboratory",
+            title_services: "💸 Services & Prices", title_promo: "🎁 Deals & Promos", title_calc: "🧬 Age Converter",
+            calc_q: "How old is the pet?", calc_res: "Human years",
+            game_title: "🐾 Waiting Room", game_desc: "Win the game and get a 5% discount certificate!", btn_shuffle: "Start Game",
+            title_donate: "🤝 Help the Shelter", donate_title: "Fundraising for 'Kind Paws' shelter", btn_donate_other: "Other amount",
+            title_contacts: "📝 Contact & Booking", form_title: "Make an Appointment", lbl_name: "Your Name", lbl_phone: "Phone", btn_send: "Send",
+            admin_title: "Contact Administration", map_title: "Location", footer_copy: "Made with love for animals.",
+            profile_title: "Pet Profile", years: "y.o.", history_title: "Visit History",
+            promo_bday: "Birthday", promo_bday_title: "Birthday Discount", promo_bday_desc: "15% off during the birthday week.",
+            promo_puppy_title: "'Puppy' Pack", promo_puppy_desc: "Vaccine + passport + chip = 10 000 ₸",
+            promo_senior_title: "Pensioners", promo_senior_desc: "10% off with valid ID card."
+        }
+    };
+
+    const servicesData = [
+        { icon: "ph-stethoscope", title_ru: "Первичный прием", title_kz: "Алғашқы қабылдау", title_en: "Initial Checkup", price: "3 000 ₸", desc_ru: "Полный осмотр терапевта, термометрия, взвешивание." },
+        { icon: "ph-flask", title_ru: "Анализ Крови", title_kz: "Қан талдауы", title_en: "Blood Test", price: "2 500 ₸", desc_ru: "Биохимия и ОАК. Готовность за 30 минут." },
+        { icon: "ph-dna", title_ru: "ПЦР Тест", title_kz: "ПТР Тест", title_en: "PCR Test", price: "4 500 ₸", desc_ru: "Выявление вирусных инфекций с точностью 99.9%." },
+        { icon: "ph-tooth", title_ru: "Стоматология", title_kz: "Стоматология", title_en: "Dentistry", price: "8 000 ₸", desc_ru: "УЗ-чистка зубов, удаление камня, полировка." },
+        { icon: "ph-syringe", title_ru: "Вакцинация", title_kz: "Вакцинация", title_en: "Vaccination", price: "5 000 ₸", desc_ru: "Комплексные вакцины Nobivac / Eurican." },
+        { icon: "ph-microchip", title_ru: "Чипирование", title_kz: "Чиптеу", title_en: "Microchipping", price: "3 500 ₸", desc_ru: "Введение международного микрочипа + регистрация в базе." }
+    ];
+
+    let currentLang = 'ru';
+
+    // ================= 2. CORE FUNCTIONS =================
+    
+    function setLanguage(lang) {
+        currentLang = lang;
+        // Update Buttons
+        document.querySelectorAll('.lang-opt').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll(`.lang-opt[onclick="setLanguage('${lang}')"]`).forEach(b => b.classList.add('active'));
+
+        // Update Text Content
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if(translations[lang][key]) el.innerHTML = translations[lang][key];
+        });
+
+        renderServices();
+        initBotWelcome();
+    }
+
+    function renderServices() {
+        const grid = document.getElementById('servicesGrid');
+        grid.innerHTML = '';
+        servicesData.forEach(s => {
+            const title = s[`title_${currentLang}`] || s.title_ru;
+            const desc = currentLang === 'ru' ? s.desc_ru : (currentLang === 'kz' ? 'Толық сипаттама.' : 'Full description.'); // Mock translation for desc
+            
+            const card = document.createElement('div');
+            card.className = 'price-card';
+            card.onclick = () => openServiceModal(title, s.price, desc, s.icon);
+            card.innerHTML = `
+                <div class="price-icon"><i class="ph-fill ${s.icon}"></i></div>
+                <h3>${title}</h3>
+                <div class="price-tag">${s.price}</div>
+                <div style="color:var(--text-muted); font-size:14px; margin-top:10px;">${desc}</div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // ================= 3. MODALS LOGIC =================
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    
+    function openProfile() { openModal('profileModal'); }
+    
+    function openServiceModal(title, price, desc, icon) {
+        const content = document.getElementById('serviceDetailContent');
+        content.innerHTML = `
+            <div style="font-size: 60px; color: var(--primary); margin-bottom: 20px;"><i class="ph-fill ${icon}"></i></div>
+            <h2>${title}</h2>
+            <div style="font-size: 32px; font-weight: 800; color: var(--accent); margin: 15px 0;">${price}</div>
+            <p style="color: var(--text-muted); line-height: 1.8;">
+                ${desc} <br><br>
+                ${currentLang === 'ru' ? 'Эта услуга проводится на сертифицированном японском оборудовании. Включает предварительный осмотр врача.' : 'Professional service provided using certified Japanese equipment.'}
+            </p>
+        `;
+        openModal('serviceModal');
+    }
+
+    function donate(amount) {
+        if(amount === 'custom') amount = prompt("Введите сумму / Енгізіңіз / Enter amount:", 1000);
+        if(amount) {
+            alert(`Спасибо! Вы пожертвовали ${amount} ₸.\nРахмет! / Thank you!`);
+            document.querySelector('.progress-bar').style.width = '85%'; // Mock progress
+        }
+    }
+
+    // ================= 4. UTILS (Theme, Age, Form) =================
+    function toggleTheme() { document.body.classList.toggle('dark-mode'); }
+    function submitForm(e) {
+        e.preventDefault();
+        alert("✅ OK! Manager will call you.");
+        e.target.reset();
+    }
+    function calculateAge() {
+        const dogAge = parseFloat(document.getElementById('dogAge').value);
+        const resultBox = document.getElementById('humanAge');
+        if (!dogAge || dogAge <= 0) { resultBox.innerText = "0"; return; }
+        let humanYears = dogAge === 1 ? 31 : Math.round(16 * Math.log(dogAge) + 31);
+        resultBox.innerText = humanYears;
+    }
+
+    // ================= 5. GAME LOGIC (With Cert) =================
+    const icons = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
+    let cards = [...icons, ...icons];
+    let flippedCards = [], matchedPairs = 0;
+    
+    function initGame() {
+        const grid = document.getElementById('gameGrid');
+        grid.innerHTML = '';
+        flippedCards = []; matchedPairs = 0;
+        cards.sort(() => 0.5 - Math.random());
+        
+        cards.forEach((icon) => {
+            const card = document.createElement('div');
+            card.classList.add('game-card');
+            card.dataset.icon = icon;
+            card.innerHTML = `<span>${icon}</span>`;
+            card.addEventListener('click', () => flipCard(card));
+            grid.appendChild(card);
+        });
+    }
+
+    function flipCard(card) {
+        if (flippedCards.length < 2 && !card.classList.contains('flip')) {
+            card.classList.add('flip');
+            flippedCards.push(card);
+            if (flippedCards.length === 2) setTimeout(checkMatch, 800);
+        }
+    }
+
+    function checkMatch() {
+        const [c1, c2] = flippedCards;
+        if (c1.dataset.icon === c2.dataset.icon) {
+            matchedPairs++;
+            if (matchedPairs === icons.length) {
+                setTimeout(() => openModal('certModal'), 500);
+            }
+        } else {
+            c1.classList.remove('flip'); c2.classList.remove('flip');
+        }
+        flippedCards = [];
+    }
+    initGame();
+
+    // ================= 6. ADVANCED AI BOT =================
+    const botResponses = {
+        ru: {
+            welcome: "Гав! 🤖 Я Робо-Лаб v2.0.<br>Знаю цены, адреса, акции. Могу позвать человека.",
+            price: "Наши цены демократичны:<br>• Прием: 3000тг<br>• Вакцина: 5000тг<br>• Чип: 3500тг",
+            address: "Мы находимся: г. Алматы, пр. Абая 150 (угол Тургут Озала).",
+            promo: "Сейчас действуют акции: скидка в День Рождения (15%) и пакет 'Щенок'.",
+            donate: "Вы можете помочь приюту в разделе 'Помощь' внизу сайта.",
+            profile: "Ваш профиль и история посещений доступны по клику на иконку человечка в шапке.",
+            unknown: "Я пока учусь. Спросите про 'цены', 'адрес' или 'акции'."
+        },
+        kz: {
+            welcome: "Алақай! 🤖 Мен Робо-Лабпын.<br>Бағалар, мекенжай, акциялар туралы сұраңыз.",
+            price: "Бағалар:<br>• Қабылдау: 3000тг<br>• Вакцина: 5000тг<br>• Чип: 3500тг",
+            address: "Мекенжай: Алматы қ., Абай даңғылы 150.",
+            promo: "Акциялар: Туған күнге 15% және 'Күшік' пакеті.",
+            donate: "Сайттың төменгі жағында баспанаға көмектесе аласыз.",
+            profile: "Жеке кабинетіңіз жоғарғы мәзірдегі белгішеде.",
+            unknown: "Түсінбедім... 'Баға', 'мекенжай' деп жазып көріңіз."
+        },
+        en: {
+            welcome: "Woof! 🤖 I am Robo-Lab v2.0.<br>Ask about prices, location, or promos.",
+            price: "Prices:<br>• Checkup: 3000 KZT<br>• Vaccine: 5000 KZT<br>• Chip: 3500 KZT",
+            address: "Location: Almaty, Abay ave 150.",
+            promo: "Promos: Birthday discount (15%) and 'Puppy' pack.",
+            donate: "You can donate to the shelter at the bottom of the page.",
+            profile: "Access your pet profile by clicking the icon in the header.",
+            unknown: "I didn't get that. Try 'price', 'address', 'promo'."
+        }
+    };
+
+    function initBotWelcome() {
+        const msgs = document.getElementById('chatMessages');
+        if(msgs.children.length < 2) msgs.innerHTML = `<div class="msg msg-bot">${botResponses[currentLang].welcome}</div>`;
+    }
+
+    const chatContainer = document.getElementById('chatContainer');
+    const messages = document.getElementById('chatMessages');
+    const input = document.getElementById('userInput');
+    const typing = document.getElementById('typing');
+
+    function toggleChat() { chatContainer.classList.toggle('active'); initBotWelcome(); }
+    function handleKeyPress(e) { if (e.key === 'Enter') sendMessage(); }
+
+    function sendMessage() {
+        const text = input.value.trim().toLowerCase();
+        if (!text) return;
+        addMessage(input.value, 'user');
+        input.value = '';
+        typing.style.display = 'flex';
+        messages.scrollTop = messages.scrollHeight;
+
+        setTimeout(() => {
+            typing.style.display = 'none';
+            const reply = getSmartReply(text);
+            addMessage(reply, 'bot');
+        }, 800);
+    }
+
+    function addMessage(text, sender) {
+        const div = document.createElement('div');
+        div.classList.add('msg', sender === 'user' ? 'msg-user' : 'msg-bot');
+        div.innerHTML = text;
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    function getSmartReply(text) {
+        const r = botResponses[currentLang];
+        
+        // Multi-language triggers
+        const triggers = {
+            price: ['цен', 'стоимост', 'баға', 'ақша', 'price', 'cost', 'pay'],
+            address: ['адрес', 'где', 'карта', 'мекен', 'қайда', 'address', 'location', 'map'],
+            promo: ['акци', 'скидк', 'жеңіл', 'promo', 'discount', 'sale'],
+            donate: ['пожертвов', 'приют', 'помощ', 'көмек', 'donate', 'help', 'charity'],
+            profile: ['профиль', 'личный', 'кабинет', 'жеке', 'profile', 'account', 'login']
+        };
+
+        if (triggers.price.some(t => text.includes(t))) return r.price;
+        if (triggers.address.some(t => text.includes(t))) return r.address;
+        if (triggers.promo.some(t => text.includes(t))) return r.promo;
+        if (triggers.donate.some(t => text.includes(t))) return r.donate;
+        if (triggers.profile.some(t => text.includes(t))) return r.profile;
+        if (text.includes('привет') || text.includes('hello') || text.includes('сәлем')) return r.welcome;
+
+        return r.unknown;
+    }
+
+    // Init
+    setLanguage('ru');
+</script>
+
+</body> 
+</html>
